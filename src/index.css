@@ -1,0 +1,39 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: "border-box";
+  font-family: "Roboto", sans-serif;
+}
+
+body {
+  /* background-image: url("https://i.pinimg.com/236x/a9/fb/ee/a9fbee426a0d256b4bd0321d1cf95544.jpg"); */
+
+  /* background-color: rgb(7, 44, 250); */
+  background-color: grey;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-size: cover;
+  height: 100vh;
+  color: white;
+}
+
+/* body p {
+   font-size: 13px; Set font size
+
+  color: #a5a5a5; /* Set text color 
+} */
+
+.container {
+  width: 95vw;
+  height: 95vh;
+  background-color: rgba(20, 25, 40, 0.25);
+  backdrop-filter: blur(19px) saturate(180%);
+  border-radius: 12px;
+  boder: 1px solid rgba(255, 255, 255, 0.125);
+  display: flex;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

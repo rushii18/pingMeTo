@@ -86,8 +86,8 @@ const Chat = ({
   };
 
   useEffect(() => {
-    //const sock = new SockJS("http://localhost:5151/ws");
-    const sock = new SockJS("https://77f5-115-96-77-182.ngrok-free.app/sw");
+    const sock = new SockJS("http://localhost:5151/ws");
+    // const sock = new SockJS("https://77f5-115-96-77-182.ngrok-free.app/sw");
     const stomp = Stomp.over(sock);
     setStompClient(stomp);
     stomp.connect({}, onConnect, onError);

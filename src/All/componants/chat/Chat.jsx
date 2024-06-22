@@ -86,7 +86,8 @@ const Chat = ({
   };
 
   useEffect(() => {
-    const sock = new SockJS("http://localhost:5151/ws");
+    //const sock = new SockJS("http://localhost:5151/ws");
+    const sock = new SockJS("https://77f5-115-96-77-182.ngrok-free.app");
     const stomp = Stomp.over(sock);
     setStompClient(stomp);
     stomp.connect({}, onConnect, onError);
@@ -122,7 +123,6 @@ const Chat = ({
   const onMessageRecived = (payload) => {
     const data = JSON.parse(payload.body);
 
-    
     setChatMsg((prev) => prev.concat(data));
     // setChatMsg([...chatMsg, data]);
     console.log(data, "RecivedMsg");

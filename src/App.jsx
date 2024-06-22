@@ -21,16 +21,13 @@ function App() {
       <div className="">
         <BrowserRouter>
           <Routes>
+            {/* <Route path="/login" element={<Login />} />
+            <Route path="/" element={<Login />} /> */}
             <Route path="/login" element={<Login />} />
-            <Route path="/" element={<Login />} />
-            {/* <Route
-              path="/login"
-              element={auth.user ? <Navigate to="/home" /> : <Login />}
-            />
             <Route
               path="/"
               element={auth.user ? <Navigate to="/home" /> : <Login />}
-            /> */}
+            />
             <Route path="/register" element={<Register />} />
             <Route path="/home" element={<Home />} />
           </Routes>

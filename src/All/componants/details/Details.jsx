@@ -6,6 +6,7 @@ import DownLoadIcon from "../image/download.png";
 import ArrowDownIcon from "../image/arrowdown.png";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserdata } from "../Redux/authAction";
+import { Link } from "react-router-dom";
 
 const Details = ({ auth }) => {
   // const dispatch = useDispatch();
@@ -60,7 +61,9 @@ const Details = ({ auth }) => {
           </div>
         </div>
         <button className="blockuser">Block User</button>
-        <button className="logout">Logout</button>
+        <Link to="/login">
+          <button className="logout">Logout</button>
+        </Link>
       </div>
     </div>
   );

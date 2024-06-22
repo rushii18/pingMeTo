@@ -46,18 +46,16 @@ const Chat = ({
 
   const [groupMessage, setGroupMessage] = useState();
   const [stompClient, setStompClient] = useState();
-  const [messages, setMessages] = useState();
+  const [messages, setMessages] = useState([]);
   const token = localStorage.getItem("token");
   const { message, auth, group } = useSelector((store) => store);
-  useEffect(() => {
-    setMessages(message.messages);
-  }, [message.messages]);
-
-  useEffect(() => {
-    setGroupMessage(group.groupMessages);
-  }, [group.groupMessages]);
 
   const dispatch = useDispatch();
+  const [chatMsg, setChatMsg] = useState([...message.messages]);
+
+  useEffect(() => {
+    setChatMsg([...message.messages]);
+  }, [active, message.messages]);
 
   useEffect(() => {
     dispatch(getUserdata(token));
@@ -69,16 +67,12 @@ const Chat = ({
   }, []);
 
   const handleSendMessage = (value) => {
-    let tem = messages;
-    let tem1 = groupMessage;
-    console.log(tem1, "tem1");
-
     const messageOnetoOne = {
       textMessage: value,
       chatid: active.id,
     };
-    tem.push(messageOnetoOne);
-    setMessages(tem);
+
+    setChatMsg(chatMsg.concat(messageOnetoOne));
 
     dispatch(createMessage({ messageOnetoOne, sendMessagetoServer }));
     const messageGroup = {
@@ -86,15 +80,12 @@ const Chat = ({
       groupid: activeGroup?.id,
     };
 
-    tem1.push(messageGroup);
-    setGroupMessage(tem1);
     dispatch(
       createGroupMessage({ messageGroup, sendMessageToServerfromGroup })
     );
   };
 
   useEffect(() => {
-    // const sock = new SockJS("http://localhost:5151/ws");
     const sock = new SockJS("http://localhost:5151/ws");
     const stomp = Stomp.over(sock);
     setStompClient(stomp);
@@ -130,8 +121,16 @@ const Chat = ({
   };
   const onMessageRecived = (payload) => {
     const data = JSON.parse(payload.body);
-    console.log(data, "data");
+
+    
+    setChatMsg((prev) => prev.concat(data));
+    // setChatMsg([...chatMsg, data]);
+    console.log(data, "RecivedMsg");
   };
+
+  // useEffect(() => {
+  //   dispatch(getAllmessage({ chatid: active?.id }));
+  // }, [messages]);
 
   // Group chats
   useEffect(() => {
@@ -157,10 +156,6 @@ const Chat = ({
     const groupMsg = JSON.parse(payload.body);
     console.log("message from group ", groupMsg);
   };
-
-  // useEffect(() => {
-  //   dispatch(getAllGroupMessages({ groupid: activeGroup?.id }));
-  // }, [group.groupMessages]);
 
   const handleSendImage = (e) => {
     // selectedImage(e.target.value);
@@ -208,10 +203,10 @@ const Chat = ({
 
           <div className="center">
             {active &&
-              messages.map((items) => (
+              chatMsg.map((items) => (
                 <div
                   className={`message ${
-                    (auth.user.id === items?.user?.id) === true
+                    auth.user.id === items?.user?.id
                       ? "current-user"
                       : "other-user"
                   }`}

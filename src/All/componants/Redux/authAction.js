@@ -23,6 +23,7 @@ export const loginUserAction = (logingData) => async (dispatch) => {
       `${API_BASE_URL}/signin`,
       logingData.data
     );
+    console.log(data);
     if (data.token) {
       localStorage.setItem("token", data.token);
       sessionStorage.setItem("token", data.token);
@@ -30,6 +31,7 @@ export const loginUserAction = (logingData) => async (dispatch) => {
 
     dispatch({ type: LOGIN_SUCCESS, payload: data.token });
   } catch (error) {
+    console.log(error);
     dispatch({ type: LOGIN_FAILURE, payload: error });
   }
 };
@@ -60,9 +62,10 @@ export const getUserdata = (token) => async (dispatch) => {
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log(data);
+    //  console.log(data);
     dispatch({ type: GET_PROFILE_SUCCESS, payload: data });
   } catch (error) {
+    console.log(error);
     dispatch({ type: GET_PROFILE_FAILURE, payload: error });
   }
 };

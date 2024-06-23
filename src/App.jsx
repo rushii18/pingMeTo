@@ -3,12 +3,14 @@ import Home from "./All/componants/home/Home";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import Register from "./All/componants/register/Register";
 import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
 
 function App() {
   const dispatch = useDispatch();
   const { auth } = useSelector((store) => store);
   const token = localStorage.getItem("token");
 
+  useEffect(() => {});
   return (
     <>
       <div className="">
@@ -16,11 +18,11 @@ function App() {
           <Routes>
             <Route
               path="/login"
-              element={auth.user ? <Navigate to="/home" /> : <Login />}
+              element={token && auth.user ? <Navigate to="/home" /> : <Login />}
             />
             <Route
               path="/"
-              element={auth.user ? <Navigate to="/home" /> : <Login />}
+              element={token && auth.user ? <Navigate to="/home" /> : <Login />}
             />
             <Route path="/register" element={<Register />} />
             <Route path="/home" element={<Home />} />

@@ -3,17 +3,12 @@ import Home from "./All/componants/home/Home";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import Register from "./All/componants/register/Register";
 import { useDispatch, useSelector } from "react-redux";
-import { getUserdata } from "./All/componants/Redux/authAction";
-import { useEffect, useState } from "react";
 
 function App() {
   const dispatch = useDispatch();
   const { auth } = useSelector((store) => store);
   const token = localStorage.getItem("token");
 
-  // useEffect(() => {
-  //   dispatch(getUserdata(token));
-  // }, [token]);
   return (
     <>
       <div className="">

@@ -44,7 +44,7 @@ export const createGroupMessage = (reqData) => async (dispatch) => {
   dispatch({ type: CREATE_GROUP_MESSAGE_REQUEST });
   try {
     const { data } = await api.post(`/api/groupmesage`, reqData.messageGroup);
-    console.log(data);  
+    console.log(data);
     reqData.sendMessageToServerfromGroup(data);
     dispatch({
       type: CREATE_GROUP_MESSAGE_SUCCESS,

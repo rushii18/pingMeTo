@@ -8,22 +8,21 @@ import { useEffect, useState } from "react";
 
 function App() {
   const dispatch = useDispatch();
-  const token = localStorage.getItem("token");
   const { auth } = useSelector((store) => store);
+  const token = localStorage.getItem("token");
 
-  //console.log(auth, "auth");
-
-  useEffect(() => {
-    dispatch(getUserdata(token));
-  }, [token]);
+  // useEffect(() => {
+  //   dispatch(getUserdata(token));
+  // }, [token]);
   return (
     <>
       <div className="">
         <BrowserRouter>
           <Routes>
-            {/* <Route path="/login" element={<Login />} />
-            <Route path="/" element={<Login />} /> */}
-            <Route path="/login" element={<Login />} />
+            <Route
+              path="/login"
+              element={token ? <Navigate to="/home" /> : <Login />}
+            />
             <Route
               path="/"
               element={auth.user ? <Navigate to="/home" /> : <Login />}

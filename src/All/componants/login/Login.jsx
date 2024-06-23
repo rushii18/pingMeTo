@@ -12,11 +12,12 @@ import * as Yup from "yup";
 const Login = () => {
   const [formValue, setformValue] = useState("");
   const dispath = useDispatch();
+  const { auth } = useSelector((store) => store);
   const loginError = useSelector((state) => state.auth.error); // Assuming 'auth' is your slice of state where errors are stored
+  const token = localStorage.getItem("token");
 
   const handleSubmit = (value) => {
     dispath(loginUserAction({ data: value }));
-
     console.log(value);
   };
   const handleform = () => {
@@ -65,12 +66,11 @@ const Login = () => {
 
             <Field type="password" name="password" placeholder="Password" />
             <ErrorMessage name="password" component="div" />
-            {/* <Link to={"/home"}> */}
             {loginError && <div className="error-message">{}</div>}
+
             <button className="signin" type="submit">
               SignIn
             </button>
-            {/* </Link> */}
 
             <button className="forget">Forgotten password?</button>
             <span>if you don't have account ?</span>

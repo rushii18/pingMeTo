@@ -6,7 +6,7 @@ import DownLoadIcon from "../image/download.png";
 import ArrowDownIcon from "../image/arrowdown.png";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserdata } from "../Redux/authAction";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const Details = ({ auth }) => {
   // const dispatch = useDispatch();
@@ -16,6 +16,13 @@ const Details = ({ auth }) => {
   // useEffect(() => {
   //   dispatch(getUserdata(token));
   // }, [token]);
+
+  const logoutUser = () => {
+    localStorage.removeItem("token");
+    sessionStorage.removeItem("token");
+    console.log("logout.", localStorage);
+  };
+
   return (
     <div className="details">
       <div className="user">
@@ -62,7 +69,9 @@ const Details = ({ auth }) => {
         </div>
         <button className="blockuser">Block User</button>
         <Link to="/login">
-          <button className="logout">Logout</button>
+          <button className="logout" onClick={logoutUser}>
+            Logout
+          </button>
         </Link>
       </div>
     </div>

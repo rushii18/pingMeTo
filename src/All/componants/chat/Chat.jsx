@@ -43,19 +43,16 @@ const Chat = ({
   const [opnechat, setOpnechat] = useState(false);
   const [selectedImage, setselectedImage] = useState();
   const [loading, setLoading] = useState();
-
-  const [groupMessage, setGroupMessage] = useState();
   const [stompClient, setStompClient] = useState();
-  const [messages, setMessages] = useState([]);
   const token = localStorage.getItem("token");
-  const { message, auth, group } = useSelector((store) => store);
-
   const dispatch = useDispatch();
-  const [chatMsg, setChatMsg] = useState([...message.messages]);
+  const { message, auth, group } = useSelector((store) => store);
+  const initialMessages = message.messages;
 
-  useEffect(() => {
-    setChatMsg([...message.messages]);
-  }, [active, message.messages]);
+  const initialMessagesGroup = group.groupMessages;
+
+  const [groupMessage, setGroupMessage] = useState([]);
+  const [chatMsg, setChatMsg] = useState([]);
 
   useEffect(() => {
     dispatch(getUserdata(token));
@@ -64,30 +61,31 @@ const Chat = ({
   const endref = useRef(null);
   useEffect(() => {
     endref.current?.scrollIntoView({ behavior: "smooth" });
-  }, []);
+  }, [initialMessages, initialMessagesGroup]);
 
   const handleSendMessage = (value) => {
     const messageOnetoOne = {
       textMessage: value,
       chatid: active.id,
     };
-
-    setChatMsg(chatMsg.concat(messageOnetoOne));
-
-    dispatch(createMessage({ messageOnetoOne, sendMessagetoServer }));
+    if (active?.id) {
+      initialMessages.push(messageOnetoOne);
+      dispatch(createMessage({ messageOnetoOne, sendMessagetoServer }));
+    }
     const messageGroup = {
       textMessage: value,
       groupid: activeGroup?.id,
     };
-
-    dispatch(
-      createGroupMessage({ messageGroup, sendMessageToServerfromGroup })
-    );
+    if (activeGroup?.id) {
+      initialMessagesGroup.push(messageGroup);
+      dispatch(
+        createGroupMessage({ messageGroup, sendMessageToServerfromGroup })
+      );
+    }
   };
 
   useEffect(() => {
-    const sock = new SockJS("https://localhost:5151/");
-    // const sock = new SockJS("https://77f5-115-96-77-182.ngrok-free.app/sw");
+    const sock = new SockJS("http://localhost:5151/ws");
     const stomp = Stomp.over(sock);
     setStompClient(stomp);
     stomp.connect({}, onConnect, onError);
@@ -122,15 +120,15 @@ const Chat = ({
   };
   const onMessageRecived = (payload) => {
     const data = JSON.parse(payload.body);
-
-    setChatMsg((prev) => prev.concat(data));
-    // setChatMsg([...chatMsg, data]);
+    setChatMsg([...chatMsg, data]);
     console.log(data, "RecivedMsg");
   };
 
-  // useEffect(() => {
-  //   dispatch(getAllmessage({ chatid: active?.id }));
-  // }, [messages]);
+  useEffect(() => {
+    if (active) {
+      dispatch(getAllmessage({ chatid: active?.id }));
+    }
+  }, [chatMsg]);
 
   // Group chats
   useEffect(() => {
@@ -155,7 +153,14 @@ const Chat = ({
   const onMessageRecivedTogroup = (payload) => {
     const groupMsg = JSON.parse(payload.body);
     console.log("message from group ", groupMsg);
+    setGroupMessage([...groupMessage, groupMsg]);
   };
+
+  useEffect(() => {
+    if (activeGroup) {
+      dispatch(getAllGroupMessages({ groupid: activeGroup?.id }));
+    }
+  }, [groupMessage]);
 
   const handleSendImage = (e) => {
     // selectedImage(e.target.value);
@@ -203,7 +208,26 @@ const Chat = ({
 
           <div className="center">
             {active &&
-              chatMsg.map((items) => (
+              initialMessages?.map((items) => (
+                <div
+                  className={`message ${
+                    auth.user.id === active.users[0].id
+                      ? "current-user"
+                      : "other-user"
+                  }`}
+                >
+                  <img src={items?.img} alt="" />
+                  <div className="texts">
+                    {items?.img}
+                    <p>{items?.textMessage}</p>
+                    <span>{items?.senderUser} </span>
+                    <span>{items?.timeStamp}</span>
+                    <span></span>
+                  </div>
+                </div>
+              ))}
+            {activeGroup &&
+              initialMessagesGroup.map((items) => (
                 <div
                   className={`message ${
                     auth.user.id === items?.user?.id
@@ -215,29 +239,8 @@ const Chat = ({
                   <div className="texts">
                     {items?.img}
                     <p>{items?.textMessage}</p>
-                    <span>1 min ago {items?.senderUser} </span>
-                    <span></span>
-                  </div>
-                </div>
-              ))}
-            {activeGroup &&
-              groupMessage.map((items) => (
-                <div
-                  className={`message ${
-                    (auth.user.id === items?.user?.id) === true
-                      ? "current-user"
-                      : "other-user"
-                  }`}
-                >
-                  <img src={items?.img} alt="" />
-                  <div className="texts">
-                    {items?.img}
-                    <p>{items.textMessage}</p>
-                    <span>
-                      {items?.timeStamp}
-
-                      {items?.senderUser}
-                    </span>
+                    <span>{items?.timeStamp}</span>
+                    <span>{items?.senderUser}</span>
                   </div>
                 </div>
               ))}

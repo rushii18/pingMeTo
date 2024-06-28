@@ -86,7 +86,7 @@ const Chat = ({
   };
 
   useEffect(() => {
-    const sock = new SockJS("https://localhost:5151");
+    const sock = new SockJS("http://localhost:5151");
     const stomp = Stomp.over(sock);
     setStompClient(stomp);
     stomp.connect({}, onConnect, onError);

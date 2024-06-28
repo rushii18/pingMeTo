@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./register.css";
 import { ErrorMessage, Field, Form, Formik } from "formik";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { resisterUserAction } from "../Redux/authAction";
 import { Link } from "react-router-dom";
 import {
@@ -14,7 +14,11 @@ import {
 
 const Register = () => {
   const [formValue, setformValue] = useState("");
+
+  const loginError = useSelector((state) => state.auth.error);
   const dispath = useDispatch();
+
+  console.log(loginError?.response?.data?.message);
 
   const handleSubmit = (value) => {
     dispath(resisterUserAction({ data: value }));
@@ -46,13 +50,13 @@ const Register = () => {
               errors.email = "Invalid email  ";
             }
             if (!values.password) {
-              errors.password = "password Required ";
+              errors.password = "Required password  ";
             } else if (
               !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/i.test(
                 values.password
               )
             ) {
-              errors.password = "Invalid password address";
+              errors.password = "Invalid password ";
             }
             if (!values.firstName) {
               errors.firstName = " firstName Required ";
@@ -77,6 +81,11 @@ const Register = () => {
             <button className="signin" type="submit">
               Signup
             </button>
+            {loginError && (
+              <div className="error-message">
+                {loginError?.response?.data?.message}
+              </div>
+            )}
             <span>if hove account ?</span>
             <Link to="/login">
               <button className="signin">Login</button>

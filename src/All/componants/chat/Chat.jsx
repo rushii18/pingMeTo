@@ -82,6 +82,7 @@ const Chat = ({
         createGroupMessage({ messageGroup, sendMessageToServerfromGroup })
       );
     }
+    setMsg("");
   };
 
   useEffect(() => {

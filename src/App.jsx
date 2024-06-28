@@ -18,11 +18,11 @@ function App() {
           <Routes>
             <Route
               path="/login"
-              element={token && auth.user ? <Navigate to="/home" /> : <Login />}
+              element={token ? <Navigate to="/home" /> : <Login />}
             />
             <Route
               path="/"
-              element={token && auth.user ? <Navigate to="/home" /> : <Login />}
+              element={token ? <Navigate to="/home" /> : <Login />}
             />
             <Route path="/register" element={<Register />} />
             <Route path="/home" element={<Home />} />

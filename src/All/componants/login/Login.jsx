@@ -66,7 +66,11 @@ const Login = () => {
 
             <Field type="password" name="password" placeholder="Password" />
             <ErrorMessage name="password" component="div" />
-            {loginError && <div className="error-message">{}</div>}
+            {loginError && (
+              <div className="error-message">
+                {loginError?.response?.data?.message}
+              </div>
+            )}
 
             <button className="signin" type="submit">
               SignIn
